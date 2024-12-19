@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: php_dashboard
+    ports:
+      - "8080:80"
+    volumes:
+      - app_html:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_quizbot
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: quiz_os
+      MYSQL_USER: quizbot
+      MYSQL_PASSWORD: quizbot
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init_scripts:/docker-entrypoint-initdb.d  # Mount the local init_scripts directory
+
+volumes:
+  app_html:
+  db_data:
+  quizbot_init:
